@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bootstrap 5 example</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script type="module" src="./src/index.js"></script>
+    <link rel="stylesheet" href="styles.scss" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
+  </head>
+  <body>
+  <div class="container">
+    <div class="row height d-flex justify-content-center align-items-center">
+      <div class="col-md-6">
+        <div class="form">
+          <div class="">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-search"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            class="form-control form-input"
+            placeholder="Search for a country..."
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" id="myList"></div>
+  <div id="test"></div>
+
+
+  <script>
+    console.log('Entered Script');
+    const lst=[]
+    $.ajax({
+      url: 'https://restcountries.com/v3.1/all',
+      complete: function (data) {
+        // console.log(data)
+        for(var i=0;i<data.responseJSON.length;i++){
+        const {name , flags , population , region,capital}= data.responseJSON[i];
+
+        const obj={
+          CountryName:JSON.stringify(name.common),
+          FlagImg:JSON.stringify(flags.png),
+          Population:JSON.stringify(population),
+          Region:JSON.stringify(region),
+          Capital:JSON.stringify(capital)
+        }
+        lst.push(obj);
+        }
+        console.log(lst.length);
+      },
+    });
+    console.log(lst)
+    let list = document.getElementById("myList");
+    for(var j=0;j<lst.length;j++){
+      console.log(lst[i]);
+    }
+   
+        document.getElementById("test").innerHTML = "Hello, " + lst[0] + "!";
+      </script>
+  
+</body>
+</html>
