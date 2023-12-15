@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Additional Country Information</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="container">
+  <h1 class="mt-3">Country Information</h1>
+
+  <div class="row mt-4" id="countryInfo">
+    <!-- Content will be dynamically added here -->
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Function to get URL parameter by name
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const countryName = getQueryParam('country'); // Get country parameter from URL
+
+    $.ajax({
+      url: 'https://restcountries.com/v3.1/all',
+      complete: function (data) {
+        const lst = [];
+        if (data.responseJSON && Array.isArray(data.responseJSON)) {
+          const allCountries = data.responseJSON;
+
+          // Filter the countries based on the countryName parameter
+          const filteredCountries = allCountries.filter(country =>
+            JSON.stringify(country.name?.common) === countryName
+          );
+
+          filteredCountries.forEach((country) => {
+            const { name, flags, population, region, capital, currencies, borders, subregion } = country;
+            const obj = {
+              CountryName: JSON.stringify(name?.common || 'N/A'),
+              FlagImg: JSON.stringify(flags?.png || ''),
+              Population: JSON.stringify(population || 'N/A'),
+              Region: JSON.stringify(region || 'N/A'),
+              Capital: JSON.stringify(capital || 'N/A'),
+              Currencies: JSON.stringify(currencies?.WST?.name || 'N/A'),
+              Borders: JSON.stringify(borders || 'N/A'),
+              SubRegion: JSON.stringify(subregion || 'N/A')
+            };
+            lst.push(obj);
+          });
+          renderData(lst);
+        }
+      },
+    });
+
+    function renderData(lst) {
+      const countryInfoDiv = document.getElementById('countryInfo');
+
+      lst.forEach(item => {
+        const countryDiv = document.createElement('div');
+        countryDiv.classList.add('col-md-6', 'offset-md-3', 'text-center', 'mb-3', 'border', 'p-3');
+
+        countryDiv.innerHTML = `
+          <h2>${JSON.parse(item.CountryName)}</h2>
+          <img src=${JSON.parse(item.FlagImg)} alt="Country Flag" class="img-fluid mb-3">
+          <p>Population: ${JSON.parse(item.Population)}</p>
+          <p>Region: ${JSON.parse(item.Region)}</p>
+          <p>Capital: ${JSON.parse(item.Capital)}</p>
+          <p>Currencies: ${JSON.parse(item.Currencies)}</p>
+          <p>Borders: ${JSON.parse(item.Borders)}</p>
+          <p>Subregion: ${JSON.parse(item.SubRegion)}</p>
+        `;
+
+        countryInfoDiv.appendChild(countryDiv);
+      });
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
